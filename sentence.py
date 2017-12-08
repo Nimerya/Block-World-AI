@@ -4,13 +4,14 @@ command_verbs = ["put", "move"]
 grammar = r"""
                 BLOCK: {<DT>?<JJ><NN><NNP>}
                 OBJECT: {<DT>?<NN>}
-                ASSERTION: {<VB.?><BLOCK><VB.?><OBJECT>}
-                QUESTION: {<VB.?><.*>*<.>}
-                
+                ASSERTION: {<BLOCK><VBZ><IN><OBJECT|BLOCK>}
+                QUESTION: {<VBZ><BLOCK><IN><OBJECT|BLOCK><.>}
+                COMMAND: {<VB.?><BLOCK><IN><OBJECT|BLOCK>}
            """
 
 # question: {verb_at_start<.*>*question_mark}
 # assertion: {object<VBR><RP><DT>?object}
+
 
 class Sentence:
 
@@ -63,6 +64,9 @@ class Sentence:
         return False
 
     def is_command(self):
+        for subtree in self.chunks.subtrees():
+            if subtree.label() == "COMMAND":
+                return True
         return False
 
     @staticmethod
