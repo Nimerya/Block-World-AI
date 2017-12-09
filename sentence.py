@@ -4,7 +4,8 @@ command_verbs = ["put", "move"]
 grammar = r"""
                 BLOCK: {<DT>?<JJ><NN><NNP>}
                 OBJECT: {<DT>?<NN>}
-                ASSERTION: {<BLOCK><VBZ><IN><OBJECT|BLOCK>}
+                POS: {<VBZ><IN>}
+                ASSERTION: {<BLOCK><POS><OBJECT|BLOCK>}
                 QUESTION: {<VBZ><BLOCK><IN><OBJECT|BLOCK><.>}
                 COMMAND: {<VB.?><BLOCK><IN><OBJECT|BLOCK>}
            """
@@ -23,6 +24,8 @@ class Sentence:
         self.question = self.is_question()
         self.assertion = self.is_assertion()
         self.command = self.is_command()
+        self.blocks = self.get_blocks()
+        self.objects = self.get_objects()
 
     def tokenize(self):
         return nltk.word_tokenize(self.text)
@@ -48,6 +51,8 @@ class Sentence:
         print("question: {}".format(self.question))
         print("assertion: {}".format(self.assertion))
         print("command: {}".format(self.command))
+        self.print_blocks()
+        self.print_objects()
         if debug:
             self.draw()
 
@@ -69,6 +74,49 @@ class Sentence:
                 return True
         return False
 
+    def get_blocks(self):
+        blocks = []
+        for subtree in self.chunks.subtrees():
+            if subtree.label() == "BLOCK":
+                b = Block()
+                for leaf in subtree.leaves():
+                    if leaf[1] == "JJ":
+                        b.color = leaf[0]
+                    if leaf[1] == "NNP":
+                        b.name = leaf[0]
+                blocks.append(b)
+        return blocks
+
+    def get_objects(self):
+        objects = []
+        for subtree in self.chunks.subtrees():
+            if subtree.label() == "OBJECT":
+                o = Object()
+                for leaf in subtree.leaves():
+                    if leaf[1] == "NN":
+                        o.name = leaf[0]
+                objects.append(o)
+        return objects
+
+    def print_blocks(self):
+        for i in self.blocks:
+            print("block name: {}; color: {}".format(i.name, i.color))
+
+    def print_objects(self):
+        for i in self.objects:
+            print("object name: {}".format(i.name))
+
     @staticmethod
     def help():
         nltk.help.upenn_tagset()
+
+
+class Block:
+    def __init__(self):
+        self.color = None
+        self.name = None
+
+
+class Object:
+    def __init__(self):
+        self.name = None
