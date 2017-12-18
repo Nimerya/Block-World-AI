@@ -14,6 +14,16 @@ grammar = r"""
 # assertion: {object<VBR><RP><DT>?object}
 
 
+class Block:
+    def __init__(self):
+        self.color = None
+        self.name = None
+
+
+class Object:
+    def __init__(self):
+        self.name = None
+
 class Sentence:
 
     def __init__(self, text):
@@ -55,6 +65,19 @@ class Sentence:
         self.print_objects()
         if debug:
             self.draw()
+
+    def translate(self):
+        out = []
+        if self.assertion:
+            for block in self.blocks:
+                # TODO
+                out.append("")
+        elif self.command:
+            # TODO
+        # self.query
+        else:
+            # TODO
+        return out
 
     def is_question(self):
         for subtree in self.chunks.subtrees():
@@ -111,12 +134,4 @@ class Sentence:
         nltk.help.upenn_tagset()
 
 
-class Block:
-    def __init__(self):
-        self.color = None
-        self.name = None
 
-
-class Object:
-    def __init__(self):
-        self.name = None
