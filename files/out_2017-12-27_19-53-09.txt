@@ -1,0 +1,15 @@
+clingo version 5.2.2
+Reading from files/instance_2017-12-27_19-53-09.lp
+Solving...
+Answer: 1
+goal moveop(bb,table,3) moveop(bb,ff,13) moveop(dd,table,2) moveop(dd,gg,15) moveop(ee,table,1) moveop(ee,cc,8) moveop(hh,bb,0) moveop(hh,ee,9) moveop(hh,gg,1) moveop(gg,table,0) moveop(gg,bb,14)
+Optimization: 11
+Answer: 2
+goal moveop(bb,ff,1) moveop(dd,aa,3) moveop(dd,ee,5) moveop(dd,gg,6) moveop(ee,table,2) moveop(ee,cc,4) moveop(hh,table,1) moveop(hh,ee,7) moveop(gg,table,0) moveop(gg,bb,5)
+Optimization: 10
+Answer: 3
+goal moveop(bb,ff,3) moveop(dd,table,3) moveop(dd,gg,5) moveop(ee,table,2) moveop(ee,cc,4) moveop(hh,table,0) moveop(hh,ee,5) moveop(gg,table,1) moveop(gg,bb,4)
+Optimization: 9
+Answer: 4
+goal moveop(bb,ff,1) moveop(dd,gg,3) moveop(ee,table,2) moveop(ee,cc,4) moveop(hh,table,1) moveop(hh,ee,5) moveop(gg,table,0) moveop(gg,bb,2)
+Optimization: 8

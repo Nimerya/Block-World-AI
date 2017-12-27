@@ -1,0 +1,86 @@
+starting insertion loop...
+end the insertion with either a QUERY or by writing "done" after you have provided the goals (if any)
+-------------------------------------
+Insert a phrase: the red block C is on the table
+
+text: the red block C is on the table
+tagged tokens: [('the', 'DT'), ('red', 'JJ'), ('block', 'NN'), ('C', 'NNP'), ('is', 'VBZ'), ('on', 'IN'), ('the', 'DT'), ('table', 'NN')]
+chunks: (S
+  (ASSERTION
+    (BLOCK the/DT red/JJ block/NN C/NNP)
+    (POS is/VBZ on/IN)
+    (OBJECT the/DT table/NN)))
+query: False
+assertion: True
+command: False
+added to planner: block(c, red, 1).
+added to planner: on(c, table, 0).
+-------------------------------------
+Insert a phrase: the yellow block B of size 4 is on the table
+
+text: the yellow block B of size 4 is on the table
+tagged tokens: [('the', 'DT'), ('yellow', 'JJ'), ('block', 'NN'), ('B', 'NNP'), ('of', 'IN'), ('size', 'NN'), ('4', 'CD'), ('is', 'VBZ'), ('on', 'IN'), ('the', 'DT'), ('table', 'NN')]
+chunks: (S
+  (ASSERTION
+    (BLOCK
+      the/DT
+      yellow/JJ
+      block/NN
+      B/NNP
+      (LENGTH of/IN size/NN 4/CD))
+    (POS is/VBZ on/IN)
+    (OBJECT the/DT table/NN)))
+query: False
+assertion: True
+command: False
+added to planner: block(b, yellow, 4).
+added to planner: on(b, table, 0).
+-------------------------------------
+Insert a phrase: the green block A of size 3 is on the yellow block B
+
+text: the green block A of size 3 is on the yellow block B
+tagged tokens: [('the', 'DT'), ('green', 'JJ'), ('block', 'NN'), ('A', 'NNP'), ('of', 'IN'), ('size', 'NN'), ('3', 'CD'), ('is', 'VBZ'), ('on', 'IN'), ('the', 'DT'), ('yellow', 'JJ'), ('block', 'NN'), ('B', 'NNP')]
+chunks: (S
+  (ASSERTION
+    (BLOCK
+      the/DT
+      green/JJ
+      block/NN
+      A/NNP
+      (LENGTH of/IN size/NN 3/CD))
+    (POS is/VBZ on/IN)
+    (BLOCK the/DT yellow/JJ block/NN B/NNP)))
+query: False
+assertion: True
+command: False
+added to planner: block(a, green, 3).
+added to planner: on(a, b, 0).
+-------------------------------------
+Insert a phrase: is the green block A on the yellow block B?
+
+text: is the green block A on the yellow block B?
+tagged tokens: [('is', 'VBZ'), ('the', 'DT'), ('green', 'JJ'), ('block', 'NN'), ('A', 'NNP'), ('on', 'IN'), ('the', 'DT'), ('yellow', 'JJ'), ('block', 'NN'), ('B', 'NNP'), ('?', '.')]
+chunks: (S
+  (QUERY
+    is/VBZ
+    (BLOCK the/DT green/JJ block/NN A/NNP)
+    on/IN
+    (BLOCK the/DT yellow/JJ block/NN B/NNP)
+    ?/.))
+query: True
+assertion: False
+command: False
+running engine...
+
+command: clingo files/instance_2017-12-27_20-03-21.lp
+clingo version 5.2.2
+Reading from files/instance_2017-12-27_20-03-21.lp
+Solving...
+Answer: 1
+query(yes)
+SATISFIABLE
+
+Models       : 1
+Calls        : 1
+Time         : 0.002s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.002s
