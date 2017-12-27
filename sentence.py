@@ -1,28 +1,41 @@
 import nltk
 
-command_verbs = ["put", "move"]
+
 grammar = r"""
-                BLOCK: {<DT>?<JJ><NN><NNP>}
-                OBJECT: {<DT>?<NN>}
+                LENGTH: {<IN><NN><CD>}
+                BLOCK: {<DT><JJ><NN><NN.?><LENGTH>?}
                 POS: {<VBZ><IN>}
-                ASSERTION: {<BLOCK><POS><OBJECT|BLOCK>}
-                QUESTION: {<VBZ><BLOCK><IN><OBJECT|BLOCK><.>}
-                COMMAND: {<VB.?><BLOCK><IN><OBJECT|BLOCK>}
+                OBJECT: {<DT><NN>}
+                ASSERTION: {<BLOCK><POS><BLOCK|OBJECT>}
+                QUERY: {<VBZ><BLOCK><IN><BLOCK|OBJECT><.>}
+                COMMAND: {<VB.?><BLOCK><IN><BLOCK|OBJECT>}
            """
 
-# question: {verb_at_start<.*>*question_mark}
-# assertion: {object<VBR><RP><DT>?object}
+# class that represents the blocks
 
 
 class Block:
+    # constructor with the default values
     def __init__(self):
-        self.color = None
+        self.color = "black"
         self.name = None
+        self.length = 1
+
+    # redefinition of the equal, not equal, has methods to better operate with sets
+    def __eq__(self, other):
+        return self.name == other.name
+
+    def __ne__(self, other):
+        return self.name != other.name
+
+    def __hash__(self):
+        return hash(str(self.name))
 
 
 class Object:
     def __init__(self):
         self.name = None
+
 
 class Sentence:
 
@@ -31,7 +44,7 @@ class Sentence:
         self.tokens = self.tokenize()
         self.tagged = self.tag()
         self.chunks = self.chunk()
-        self.question = self.is_question()
+        self.query = self.is_query()
         self.assertion = self.is_assertion()
         self.command = self.is_command()
         self.blocks = self.get_blocks()
@@ -58,30 +71,46 @@ class Sentence:
         print("\ntext: {}".format(self.text))
         print("tagged tokens: {}".format(self.tagged))
         print("chunks: {}".format(self.chunks))
-        print("question: {}".format(self.question))
+        print("query: {}".format(self.query))
         print("assertion: {}".format(self.assertion))
         print("command: {}".format(self.command))
-        self.print_blocks()
-        self.print_objects()
+        # self.print_blocks()
+        # self.print_objects()
         if debug:
             self.draw()
 
-    def translate(self):
+    def translate(self, processed_blocks):
         out = []
         if self.assertion:
             for block in self.blocks:
-                # TODO
-                out.append("")
+                if block not in processed_blocks:
+                    block_fact = "block({}, {}, {}).".format(block.name, block.color, block.length).lower()
+                    out.append(block_fact)
+            if len(self.blocks) == 2:
+                positional_fact = "on({}, {}, 0).".format(self.blocks[0].name, self.blocks[1].name).lower()
+            else:
+                positional_fact = "on({}, {}, 0).".format(self.blocks[0].name, self.objects[0].name).lower()
+            out.append(positional_fact)
         elif self.command:
-            # TODO
+            if len(self.blocks) == 2:
+                goal = "on({}, {}, T),".format(self.blocks[0].name.lower(), self.blocks[1].name.lower())
+            else:
+                goal = "on({}, {}, T),".format(self.blocks[0].name.lower(), self.objects[0].name.lower())
+            out.append(goal)
+            return out
         # self.query
         else:
-            # TODO
+            if len(self.blocks) == 2:
+                query = "on({}, {}, _)".format(self.blocks[0].name, self.blocks[1].name).lower()
+            else:
+                query = "on({}, {}, _)".format(self.blocks[0].name, self.objects[0].name).lower()
+            out.append(query)
+            return out
         return out
 
-    def is_question(self):
+    def is_query(self):
         for subtree in self.chunks.subtrees():
-            if subtree.label() == "QUESTION":
+            if subtree.label() == "QUERY":
                 return True
         return False
 
@@ -107,6 +136,8 @@ class Sentence:
                         b.color = leaf[0]
                     if leaf[1] == "NNP":
                         b.name = leaf[0]
+                    if leaf[1] == "CD":
+                        b.length = leaf[0]
                 blocks.append(b)
         return blocks
 
@@ -123,7 +154,7 @@ class Sentence:
 
     def print_blocks(self):
         for i in self.blocks:
-            print("block name: {}; color: {}".format(i.name, i.color))
+            print("block name: {}; color: {}; length: {}".format(i.name, i.color, i.length))
 
     def print_objects(self):
         for i in self.objects:

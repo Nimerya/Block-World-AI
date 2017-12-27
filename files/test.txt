@@ -1,0 +1,19 @@
+the red block AA with length 2 is on the table
+the green block BB with length 4 is on the red block AA
+the green block CC with length 3 is on the table
+the yellow block DD with length 1 is on the green block CC
+the red block EE with length 2 is on the yellow block DD
+the yellow block HH with length 1 is on the red block EE
+the yellow block FF with length 4 is on the table
+the red block GG with length 2 is on the yellow block FF
+
+put the red block AA on the table
+put the green block CC on the table
+put the yellow block FF on the table
+put the red block EE on the green block CC
+put the yellow block HH on the red block EE
+put the green block BB on the yellow block FF
+put the red block GG on the green block BB
+put the yellow block DD on the red block GG
+
+done
