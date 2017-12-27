@@ -61,9 +61,9 @@ def main():
             break
     # close the instance file
     lp_file.close()
-    print("running planner...\n")
+    print("running engine...\n")
     # run the solver
-    command = "clingo -t 4 {}".format("files/instance_{}.lp".format(now))
+    command = "clingo {}".format("files/instance_{}.lp".format(now))
     print("command: {}".format(command))
     run_command(command)
 
